@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Common\User;
 
+use App\Services\Commons\UserService;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Permission;
@@ -17,6 +18,7 @@ class UserIndex extends Component
     use WithFileUploads;
     
     public $photo;
+    protected $userService;
 
 	public $q;
 	public $sortBy="id";
@@ -47,16 +49,28 @@ class UserIndex extends Component
         'user.password' => 'required|min:8',
         'photo' => 'image|max:1024', // 1MB Max
 	];
-    public function render()
+    // public function __construct()
+    // {
+    //     $this->userService=new UserService;
+    // }
+
+
+
+    public function render(UserService $userService)
     {
+        $this->userService=$userService;
+
+        
+        $users= $this->userService->getAllUsers();
+
         $this->user== new user;
         $permissions=Permission::all();
         $groups=Group::all();
+    	// $users=User::where('name','like','%'.$this->q.'%')
+    	// ->orWhere('email','like','%'.$this->q.'%')
+    	// ->orderBy($this->sortBy,$this->sortAsc ? 'ASC': 'DESC')
+    	// ->paginate(5);
 
-    	$users=User::where('name','like','%'.$this->q.'%')
-    	->orWhere('email','like','%'.$this->q.'%')
-    	->orderBy($this->sortBy,$this->sortAsc ? 'ASC': 'DESC')
-    	->paginate(5);
         return view('livewire.common.user.user-index',[
         	'users'=> $users,
         	'groups'=> $groups,

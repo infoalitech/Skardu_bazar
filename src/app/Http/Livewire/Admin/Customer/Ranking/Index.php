@@ -52,8 +52,6 @@ class Index extends Component
         ]);
     }
 
-
-
 // Updating page on changes
     public function updatingActive(){
     	$this->resetPage();
